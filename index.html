@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tommy Majewski — Swim Performance</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0f1623;
+      color: #e8edf5;
+      min-height: 100vh;
+      padding: 32px 24px 64px;
+    }
+
+    /* ── Header ── */
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    header .avatar {
+      width: 64px; height: 64px;
+      background: #1d5fa8;
+      border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 700; color: #fff;
+      margin-bottom: 12px;
+    }
+    header h1 { font-size: 28px; font-weight: 700; }
+    header p  { color: #8a9ab5; font-size: 14px; margin-top: 4px; }
+
+    /* ── Summary cards ── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      max-width: 900px;
+      margin: 0 auto 40px;
+    }
+    .card {
+      background: #1a2436;
+      border: 1px solid #253047;
+      border-radius: 12px;
+      padding: 20px 16px;
+      text-align: center;
+    }
+    .card .label { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: #8a9ab5; margin-bottom: 8px; }
+    .card .value { font-size: 26px; font-weight: 700; }
+    .card .sub   { font-size: 12px; color: #8a9ab5; margin-top: 4px; }
+    .drop  { color: #34d399; }
+    .added { color: #f87171; }
+
+    /* ── Section title ── */
+    .section-title {
+      max-width: 900px;
+      margin: 0 auto 16px;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #8a9ab5;
+      border-bottom: 1px solid #253047;
+      padding-bottom: 8px;
+    }
+
+    /* ── Event cards ── */
+    .events {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      max-width: 900px;
+      margin: 0 auto 48px;
+    }
+    .event-card {
+      background: #1a2436;
+      border: 1px solid #253047;
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .event-card h3 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .event-card .stroke-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+    .badge-Free    { background: #1d4ed8; color: #bfdbfe; }
+    .badge-Back    { background: #7c3aed; color: #ede9fe; }
+    .badge-Breast  { background: #0e7490; color: #cffafe; }
+    .badge-Fly     { background: #b45309; color: #fef3c7; }
+    .badge-IM      { background: #374151; color: #e5e7eb; }
+
+    .chart-wrap { position: relative; height: 130px; }
+
+    .splits {
+      display: flex;
+      gap: 12px;
+      padding: 4px 0 6px;
+      font-size: 11px;
+      color: #8a9ab5;
+      border-bottom: 1px solid #253047;
+    }
+    .split-label { opacity: .7; margin-right: 2px; }
+    .split-val   { font-variant-numeric: tabular-nums; font-weight: 600; color: #b0bdd0; margin-right: 8px; }
+
+    .event-rows { margin-top: 14px; }
+    .event-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      padding: 6px 0;
+      border-bottom: 1px solid #253047;
+    }
+    .event-row:last-child { border-bottom: none; }
+    .event-row .meet-name { color: #8a9ab5; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 8px; }
+    .event-row .time { font-weight: 600; font-variant-numeric: tabular-nums; }
+    .event-row .delta { font-size: 11px; font-weight: 600; margin-left: 8px; min-width: 52px; text-align: right; }
+
+    /* ── Best times table ── */
+    .table-wrap {
+      max-width: 900px;
+      margin: 0 auto 48px;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    thead th {
+      text-align: left;
+      padding: 10px 14px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: #8a9ab5;
+      border-bottom: 1px solid #253047;
+    }
+    tbody tr { transition: background .15s; }
+    tbody tr:hover { background: #1f2d42; }
+    tbody td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #1a2436;
+      font-variant-numeric: tabular-nums;
+    }
+    tbody td:last-child { text-align: right; }
+    .best-time { font-weight: 700; color: #60a5fa; }
+
+    footer {
+      text-align: center;
+      color: #3d4f68;
+      font-size: 12px;
+      margin-top: 48px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="avatar">TM</div>
+  <h1>Tommy Majewski</h1>
+  <p>WMY-NJ &nbsp;·&nbsp; Age 11 &nbsp;·&nbsp; Boys 11–12</p>
+</header>
+
+<div class="cards" id="summary-cards"></div>
+
+<div id="stroke-sections"></div>
+
+<div class="section-title" style="max-width:900px;margin:0 auto 16px;">Best Times</div>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Event</th>
+        <th>Best Time</th>
+        <th>Meet</th>
+        <th>Date</th>
+        <th>Total Drop</th>
+      </tr>
+    </thead>
+    <tbody id="best-times-body"></tbody>
+  </table>
+</div>
+
+<footer>Last updated May 30, 2026</footer>
+
+<script>
+// ── Raw data ────────────────────────────────────────────────────────────────
+const raw = [
+  { meet:"CAT May The Splash Be With You", date:"2026-05-09", event:"100m Free",   stroke:"Free",   entry:125.99, finals:105.34, change:-20.65, place:24, seed:25, notes:"Split: 50.67 + 54.67" },
+  { meet:"CAT May The Splash Be With You", date:"2026-05-09", event:"50m Back",    stroke:"Back",   entry:65.99,  finals:51.57,  change:-14.42, place:34, seed:37 },
+  { meet:"CAT May The Splash Be With You", date:"2026-05-09", event:"50m Breast",  stroke:"Breast", entry:65.99,  finals:58.29,  change:-7.70,  place:22, seed:24 },
+  { meet:"HACY Summer Solstice",           date:"2026-05-30", event:"100m Breast", stroke:"Breast", entry:114.44, finals:120.73, change:+6.29,  place:27, seed:18, notes:"Split: 58.18 + 62.55" },
+  { meet:"HACY Summer Solstice",           date:"2026-05-30", event:"50m Back",    stroke:"Back",   entry:44.33,  finals:55.27,  change:+10.94, place:50, seed:18 },
+  { meet:"HACY Summer Solstice",           date:"2026-05-30", event:"50m Free",    stroke:"Free",   entry:39.33,  finals:45.26,  change:+5.93,  place:55, seed:39 },
+];
+
+// ── Helpers ─────────────────────────────────────────────────────────────────
+function fmtTime(sec) {
+  if (sec >= 60) {
+    const m = Math.floor(sec / 60);
+    const s = (sec % 60).toFixed(2).padStart(5, "0");
+    return `${m}:${s}`;
+  }
+  return sec.toFixed(2);
+}
+
+function fmtDelta(d) {
+  return (d < 0 ? "" : "+") + d.toFixed(2);
+}
+
+function shortMeet(name) {
+  if (name.includes("CAT")) return "CAT May";
+  if (name.includes("HACY")) return "HACY Solstice";
+  return name;
+}
+
+// ── Group by event ───────────────────────────────────────────────────────────
+const byEvent = {};
+raw.forEach(r => {
+  if (!byEvent[r.event]) byEvent[r.event] = [];
+  byEvent[r.event].push(r);
+});
+// Sort each group chronologically
+Object.values(byEvent).forEach(arr => arr.sort((a, b) => a.date.localeCompare(b.date)));
+
+// ── Summary cards ────────────────────────────────────────────────────────────
+const totalMeets = new Set(raw.map(r => r.meet)).size;
+const totalEvents = raw.length;
+const drops = raw.filter(r => r.change < 0);
+const totalDrop = drops.reduce((s, r) => s + r.change, 0);
+const bestEvent = drops.sort((a,b) => a.change - b.change)[0];
+
+const cardsEl = document.getElementById("summary-cards");
+const cardData = [
+  { label: "Meets",         value: totalMeets,           sub: "recorded" },
+  { label: "Swims",         value: totalEvents,          sub: "total entries" },
+  { label: "Times Dropped", value: drops.length,         sub: `of ${totalEvents} swims`, cls: "drop" },
+  { label: "Best Drop",     value: fmtDelta(bestEvent.change) + "s", sub: bestEvent.event, cls: "drop" },
+];
+cardData.forEach(c => {
+  cardsEl.innerHTML += `
+    <div class="card">
+      <div class="label">${c.label}</div>
+      <div class="value ${c.cls || ''}">${c.value}</div>
+      <div class="sub">${c.sub}</div>
+    </div>`;
+});
+
+// ── Stroke colors for charts ─────────────────────────────────────────────────
+const strokeColor = { Free: "#3b82f6", Back: "#8b5cf6", Breast: "#06b6d4", Fly: "#f59e0b", IM: "#6b7280" };
+
+// ── Group events by stroke ────────────────────────────────────────────────────
+const strokeOrder = ["Free", "Back", "Breast", "Fly", "IM"];
+const byStroke = {};
+Object.entries(byEvent).forEach(([eventName, swims]) => {
+  const s = swims[0].stroke;
+  if (!byStroke[s]) byStroke[s] = [];
+  byStroke[s].push([eventName, swims]);
+});
+
+// ── Render stroke sections ────────────────────────────────────────────────────
+const sectionsEl = document.getElementById("stroke-sections");
+let chartIdx = 0;
+
+strokeOrder.forEach(stroke => {
+  if (!byStroke[stroke]) return;
+
+  sectionsEl.innerHTML += `
+    <div class="section-title" style="max-width:900px;margin:0 auto 16px;">${stroke}</div>
+    <div class="events" id="stroke-${stroke}"></div>`;
+
+  // 50m before 100m within each stroke section
+  const sortedByDist = [...byStroke[stroke]].sort((a, b) => {
+    const distA = parseInt(a[0]); const distB = parseInt(b[0]);
+    return distA - distB;
+  });
+
+  sortedByDist.forEach(([eventName, swims]) => {
+  const color    = strokeColor[stroke] || "#6b7280";
+  const cid      = `chart-${chartIdx++}`;
+  const is100m   = eventName.startsWith("100");
+
+  const labels = swims.map(s => shortMeet(s.meet));
+  const times  = swims.map(s => s.finals);
+
+  const rowsHtml = swims.map(s => {
+    const cls   = s.change <= 0 ? "drop" : "added";
+    const arrow = s.change <= 0 ? "▼" : "▲";
+
+    // Parse split times from notes: "Split: 50.67 + 54.67"
+    let splitHtml = "";
+    if (is100m && s.notes && s.notes.startsWith("Split:")) {
+      const parts = s.notes.replace("Split:", "").trim().split("+").map(p => p.trim());
+      if (parts.length === 2) {
+        splitHtml = `<div class="splits">
+          <span class="split-label">1st 50</span><span class="split-val">${fmtTime(parseFloat(parts[0]))}</span>
+          <span class="split-label">2nd 50</span><span class="split-val">${fmtTime(parseFloat(parts[1]))}</span>
+        </div>`;
+      }
+    }
+
+    return `
+      <div class="event-row">
+        <span class="meet-name">${shortMeet(s.meet)}</span>
+        <span class="time">${fmtTime(s.finals)}</span>
+        <span class="delta ${cls}">${arrow} ${Math.abs(s.change).toFixed(2)}s</span>
+      </div>${splitHtml}`;
+  }).join("");
+
+  document.getElementById(`stroke-${stroke}`).innerHTML += `
+    <div class="event-card">
+      <h3>${eventName}</h3>
+      <span class="stroke-badge badge-${stroke}">${stroke}</span>
+      <div class="chart-wrap">
+        <canvas id="${cid}"></canvas>
+      </div>
+      <div class="event-rows">${rowsHtml}</div>
+    </div>`;
+
+  requestAnimationFrame(() => {
+    const ctx = document.getElementById(cid);
+    if (!ctx) return;
+
+    // Y axis: pad around min/max
+    const minT = Math.min(...times);
+    const maxT = Math.max(...times);
+    const pad  = (maxT - minT) * 0.3 || 2;
+
+    new Chart(ctx, {
+      type: "line",
+      data: {
+        labels,
+        datasets: [{
+          data: times,
+          borderColor: color,
+          backgroundColor: color + "22",
+          borderWidth: 2,
+          pointRadius: 5,
+          pointBackgroundColor: color,
+          fill: true,
+          tension: 0.3,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: {
+          callbacks: {
+            label: ctx => " " + fmtTime(ctx.parsed.y)
+          }
+        }},
+        scales: {
+          x: { ticks: { color: "#8a9ab5", font: { size: 10 } }, grid: { color: "#1e2d42" } },
+          y: {
+            min: Math.max(0, minT - pad),
+            max: maxT + pad,
+            ticks: {
+              color: "#8a9ab5",
+              font: { size: 10 },
+              callback: v => fmtTime(v)
+            },
+            grid: { color: "#1e2d42" }
+          }
+        }
+      }
+    }); // end requestAnimationFrame
+  }); // end inner event forEach
+  }); // end byStroke[stroke].forEach
+}); // end strokeOrder.forEach
+
+// ── Best times table ─────────────────────────────────────────────────────────
+const tbody = document.getElementById("best-times-body");
+
+// Event order
+const eventOrder = ["50m Free","100m Free","50m Back","100m Back","50m Breast","100m Breast","50m Fly","100m Fly","200m IM"];
+const sortedEvents = Object.keys(byEvent).sort((a,b) => {
+  const ai = eventOrder.indexOf(a), bi = eventOrder.indexOf(b);
+  return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+});
+
+sortedEvents.forEach(eventName => {
+  const swims = byEvent[eventName];
+  const best  = swims.reduce((b, s) => s.finals < b.finals ? s : b, swims[0]);
+  // total improvement = first entry minus best finals
+  const firstEntry = swims[0].entry;
+  const eventDrop  = best.finals - firstEntry;
+  const cls = eventDrop <= 0 ? "drop" : "added";
+
+  tbody.innerHTML += `
+    <tr>
+      <td>${eventName}</td>
+      <td class="best-time">${fmtTime(best.finals)}</td>
+      <td>${shortMeet(best.meet)}</td>
+      <td>${best.date}</td>
+      <td class="${cls}">${fmtDelta(eventDrop)}s</td>
+    </tr>`;
+});
+</script>
+</body>
+</html>
