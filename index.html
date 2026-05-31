@@ -10,8 +10,8 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #0f1623;
-      color: #e8edf5;
+      background: #f4f7fc;
+      color: #1a1a2e;
       min-height: 100vh;
       padding: 32px 24px 64px;
     }
@@ -29,8 +29,8 @@
       font-size: 22px; font-weight: 700; color: #fff;
       margin-bottom: 12px;
     }
-    header h1 { font-size: 28px; font-weight: 700; }
-    header p  { color: #8a9ab5; font-size: 14px; margin-top: 4px; }
+    header h1 { font-size: 28px; font-weight: 700; color: #1a1a2e; }
+    header p  { color: #5a6a85; font-size: 14px; margin-top: 4px; }
 
     /* ── Summary cards ── */
     .cards {
@@ -41,17 +41,18 @@
       margin: 0 auto 40px;
     }
     .card {
-      background: #1a2436;
-      border: 1px solid #253047;
+      background: #fff;
+      border: 1px solid #dce6f5;
       border-radius: 12px;
       padding: 20px 16px;
       text-align: center;
+      box-shadow: 0 1px 4px rgba(30,70,140,.07);
     }
-    .card .label { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: #8a9ab5; margin-bottom: 8px; }
-    .card .value { font-size: 26px; font-weight: 700; }
-    .card .sub   { font-size: 12px; color: #8a9ab5; margin-top: 4px; }
-    .drop  { color: #34d399; }
-    .added { color: #f87171; }
+    .card .label { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: #4466aa; margin-bottom: 8px; }
+    .card .value { font-size: 26px; font-weight: 700; color: #1a1a2e; }
+    .card .sub   { font-size: 12px; color: #5a6a85; margin-top: 4px; }
+    .drop  { color: #0a7a4b; }
+    .added { color: #c0392b; }
 
     /* ── Section title ── */
     .section-title {
@@ -61,8 +62,8 @@
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: .08em;
-      color: #8a9ab5;
-      border-bottom: 1px solid #253047;
+      color: #1d5fa8;
+      border-bottom: 2px solid #dce6f5;
       padding-bottom: 8px;
     }
 
@@ -75,15 +76,17 @@
       margin: 0 auto 48px;
     }
     .event-card {
-      background: #1a2436;
-      border: 1px solid #253047;
+      background: #fff;
+      border: 1px solid #dce6f5;
       border-radius: 12px;
       padding: 20px;
+      box-shadow: 0 1px 4px rgba(30,70,140,.07);
     }
     .event-card h3 {
       font-size: 15px;
       font-weight: 600;
       margin-bottom: 4px;
+      color: #1a1a2e;
     }
     .event-card .stroke-badge {
       display: inline-block;
@@ -95,11 +98,11 @@
       border-radius: 20px;
       margin-bottom: 16px;
     }
-    .badge-Free    { background: #1d4ed8; color: #bfdbfe; }
-    .badge-Back    { background: #7c3aed; color: #ede9fe; }
-    .badge-Breast  { background: #0e7490; color: #cffafe; }
-    .badge-Fly     { background: #b45309; color: #fef3c7; }
-    .badge-IM      { background: #374151; color: #e5e7eb; }
+    .badge-Free    { background: #1d4ed8; color: #fff; }
+    .badge-Back    { background: #7c3aed; color: #fff; }
+    .badge-Breast  { background: #0e7490; color: #fff; }
+    .badge-Fly     { background: #b45309; color: #fff; }
+    .badge-IM      { background: #374151; color: #fff; }
 
     .chart-wrap { position: relative; height: 130px; }
 
@@ -108,11 +111,11 @@
       gap: 12px;
       padding: 4px 0 6px;
       font-size: 11px;
-      color: #8a9ab5;
-      border-bottom: 1px solid #253047;
+      color: #5a6a85;
+      border-bottom: 1px solid #dce6f5;
     }
     .split-label { opacity: .7; margin-right: 2px; }
-    .split-val   { font-variant-numeric: tabular-nums; font-weight: 600; color: #b0bdd0; margin-right: 8px; }
+    .split-val   { font-variant-numeric: tabular-nums; font-weight: 600; color: #1d5fa8; margin-right: 8px; }
 
     .event-rows { margin-top: 14px; }
     .event-row {
@@ -121,11 +124,11 @@
       justify-content: space-between;
       font-size: 12px;
       padding: 6px 0;
-      border-bottom: 1px solid #253047;
+      border-bottom: 1px solid #dce6f5;
     }
     .event-row:last-child { border-bottom: none; }
-    .event-row .meet-name { color: #8a9ab5; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 8px; }
-    .event-row .time { font-weight: 600; font-variant-numeric: tabular-nums; }
+    .event-row .meet-name { color: #5a6a85; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 8px; }
+    .event-row .time { font-weight: 600; font-variant-numeric: tabular-nums; color: #1a1a2e; }
     .event-row .delta { font-size: 11px; font-weight: 600; margin-left: 8px; min-width: 52px; text-align: right; }
 
     /* ── Best times table ── */
@@ -133,6 +136,10 @@
       max-width: 900px;
       margin: 0 auto 48px;
       overflow-x: auto;
+      background: #fff;
+      border: 1px solid #dce6f5;
+      border-radius: 12px;
+      box-shadow: 0 1px 4px rgba(30,70,140,.07);
     }
     table {
       width: 100%;
@@ -145,22 +152,23 @@
       font-size: 11px;
       text-transform: uppercase;
       letter-spacing: .07em;
-      color: #8a9ab5;
-      border-bottom: 1px solid #253047;
+      color: #1d5fa8;
+      border-bottom: 1px solid #dce6f5;
     }
     tbody tr { transition: background .15s; }
-    tbody tr:hover { background: #1f2d42; }
+    tbody tr:hover { background: #f0f5ff; }
     tbody td {
       padding: 12px 14px;
-      border-bottom: 1px solid #1a2436;
+      border-bottom: 1px solid #eef2fa;
       font-variant-numeric: tabular-nums;
+      color: #1a1a2e;
     }
     tbody td:last-child { text-align: right; }
-    .best-time { font-weight: 700; color: #60a5fa; }
+    .best-time { font-weight: 700; color: #1d4ed8; }
 
     footer {
       text-align: center;
-      color: #3d4f68;
+      color: #8a9ab5;
       font-size: 12px;
       margin-top: 48px;
     }
@@ -169,75 +177,14 @@
     @page { margin: 0.6in 0.5in; }
 
     @media print {
-
-      body {
-        background: #fff;
-        color: #1a1a2e;
-        padding: 0;
-        font-size: 11px;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
+      body { padding: 0; font-size: 11px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      body, .card, .event-card, .badge-Free, .badge-Back, .badge-Breast, .badge-Fly, .badge-IM {
+        -webkit-print-color-adjust: exact; print-color-adjust: exact;
       }
-
-      header .avatar {
-        background: #1d5fa8;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-
-      header h1 { color: #1a1a2e; }
-      header p  { color: #555; }
-
-      /* Summary cards */
-      .cards { margin-bottom: 24px; }
-      .card {
-        background: #f0f5ff;
-        border: 1px solid #c5d5f0;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-      .card .label { color: #4466aa; }
-      .card .sub   { color: #555; }
-      .drop  { color: #0a7a4b !important; }
-      .added { color: #c0392b !important; }
-
-      /* Section titles */
-      .section-title {
-        color: #1d5fa8;
-        border-bottom-color: #c5d5f0;
-      }
-
-      /* Event cards */
-      .event-card {
-        background: #f8faff;
-        border: 1px solid #d0ddf5;
-        break-inside: avoid;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-      .event-card h3 { color: #1a1a2e; }
-      .event-row { border-bottom-color: #dde6f5; }
-      .event-row .meet-name { color: #555; }
-      .event-row .time { color: #1a1a2e; }
-      .splits { color: #555; border-bottom-color: #dde6f5; }
-      .split-val { color: #1d5fa8; }
-
-      /* Stroke badges — keep colors */
-      .badge-Free   { background: #1d4ed8; color: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      .badge-Back   { background: #7c3aed; color: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      .badge-Breast { background: #0e7490; color: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-
-      /* Best times table */
-      .table-wrap { margin-bottom: 24px; }
-      thead th { color: #1d5fa8; border-bottom-color: #c5d5f0; }
-      tbody td  { border-bottom-color: #e8eef8; color: #1a1a2e; }
-      tbody tr:hover { background: none; }
-      .best-time { color: #1d4ed8; }
-
-      footer { color: #888; }
-
-      /* Prevent page breaks inside stroke sections */
+      .event-card { break-inside: avoid; }
       #stroke-sections > * { break-inside: avoid; }
+      tbody tr:hover { background: none; }
+      box-shadow { box-shadow: none; }
     }
   </style>
 </head>
@@ -438,16 +385,16 @@ strokeOrder.forEach(stroke => {
           }
         }},
         scales: {
-          x: { ticks: { color: "#8a9ab5", font: { size: 10 } }, grid: { color: "#1e2d42" } },
+          x: { ticks: { color: "#7a8faa", font: { size: 10 } }, grid: { color: "#e4ecf7" } },
           y: {
             min: Math.max(0, minT - pad),
             max: maxT + pad,
             ticks: {
-              color: "#8a9ab5",
+              color: "#7a8faa",
               font: { size: 10 },
               callback: v => fmtTime(v)
             },
-            grid: { color: "#1e2d42" }
+            grid: { color: "#e4ecf7" }
           }
         }
       }
