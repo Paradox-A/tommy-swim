@@ -164,6 +164,78 @@
       font-size: 12px;
       margin-top: 48px;
     }
+
+    /* ── Print styles ── */
+    @media print {
+      @page { margin: 0.6in 0.5in; }
+
+      body {
+        background: #fff;
+        color: #1a1a2e;
+        padding: 0;
+        font-size: 11px;
+      }
+
+      header .avatar {
+        background: #1d5fa8;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      header h1 { color: #1a1a2e; }
+      header p  { color: #555; }
+
+      /* Summary cards */
+      .cards { margin-bottom: 24px; }
+      .card {
+        background: #f0f5ff;
+        border: 1px solid #c5d5f0;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .card .label { color: #4466aa; }
+      .card .sub   { color: #555; }
+      .drop  { color: #0a7a4b !important; }
+      .added { color: #c0392b !important; }
+
+      /* Section titles */
+      .section-title {
+        color: #1d5fa8;
+        border-bottom-color: #c5d5f0;
+      }
+
+      /* Event cards */
+      .event-card {
+        background: #f8faff;
+        border: 1px solid #d0ddf5;
+        break-inside: avoid;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .event-card h3 { color: #1a1a2e; }
+      .event-row { border-bottom-color: #dde6f5; }
+      .event-row .meet-name { color: #555; }
+      .event-row .time { color: #1a1a2e; }
+      .splits { color: #555; border-bottom-color: #dde6f5; }
+      .split-val { color: #1d5fa8; }
+
+      /* Stroke badges — keep colors */
+      .badge-Free   { background: #1d4ed8; color: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .badge-Back   { background: #7c3aed; color: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .badge-Breast { background: #0e7490; color: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+      /* Best times table */
+      .table-wrap { margin-bottom: 24px; }
+      thead th { color: #1d5fa8; border-bottom-color: #c5d5f0; }
+      tbody td  { border-bottom-color: #e8eef8; color: #1a1a2e; }
+      tbody tr:hover { background: none; }
+      .best-time { color: #1d4ed8; }
+
+      footer { color: #888; }
+
+      /* Prevent page breaks inside stroke sections */
+      #stroke-sections > * { break-inside: avoid; }
+    }
   </style>
 </head>
 <body>
