@@ -228,6 +228,7 @@ const raw = [
   { meet:"HACY Summer Solstice",           date:"2026-05-30", event:"50m Back",    stroke:"Back",   entry:44.33,  finals:55.27,  change:+10.94, place:50, seed:18 },
   { meet:"HACY Summer Solstice",           date:"2026-05-30", event:"50m Free",    stroke:"Free",   entry:39.33,  finals:45.26,  change:+5.93,  place:55, seed:39 },
   { meet:"HACY Summer Solstice",           date:"2026-05-31", event:"50m Fly",     stroke:"Fly",    entry:45.55,  finals:63.61,  change:+18.06, place:36, seed:18 },
+  { meet:"HACY Summer Solstice",           date:"2026-05-31", event:"100m Back",   stroke:"Back",   entry:95.55,  finals:null,   change:null,   place:"DQ", seed:12, dq:true },
   { meet:"HACY Summer Solstice",           date:"2026-05-31", event:"100m Free",   stroke:"Free",   entry:85.55,  finals:103.94, change:+18.39, place:49, seed:29, notes:"Split: 50.92 + 53.02" },
 ];
 
@@ -258,7 +259,7 @@ Object.values(byEvent).forEach(arr => arr.sort((a, b) => a.date.localeCompare(b.
 // ── Summary cards ─────────────────────────────────────────────────────────────
 const totalMeets  = new Set(raw.map(r => r.meet)).size;
 const totalSwims  = raw.length;
-const drops       = raw.filter(r => r.change < 0).sort((a, b) => a.change - b.change);
+const drops       = raw.filter(r => r.change !== null && r.change < 0).sort((a, b) => a.change - b.change);
 const bestDrop    = drops[0];
 
 document.getElementById("summary-cards").innerHTML = [
@@ -297,9 +298,17 @@ const sectionsHtml = strokeOrder.filter(s => byStroke[s]).map(stroke => {
     const is100m = eventName.startsWith("100");
 
     // Queue chart for after DOM is set
-    chartQueue.push({ cid, times: swims.map(s => s.finals), labels: swims.map(s => shortMeet(s.meet)), color });
+    const validSwims = swims.filter(s => !s.dq && s.finals !== null);
+    if (validSwims.length > 0) {
+      chartQueue.push({ cid, times: validSwims.map(s => s.finals), labels: validSwims.map(s => shortMeet(s.meet)), color });
+    }
 
     const rowsHtml = swims.map(s => {
+      if (s.dq) return `<div class="event-row">
+        <span class="meet-name">${shortMeet(s.meet)}</span>
+        <span class="time" style="color:#c0392b">DQ</span>
+        <span class="delta" style="color:#c0392b">—</span>
+      </div>`;
       const cls   = s.change <= 0 ? "drop" : "added";
       const arrow = s.change <= 0 ? "▼" : "▲";
       let splitHtml = "";
@@ -369,8 +378,20 @@ const sortedEvents = Object.keys(byEvent).sort((a, b) => {
 });
 
 document.getElementById("best-times-body").innerHTML = sortedEvents.map(eventName => {
-  const swims     = byEvent[eventName];
-  const best      = swims.reduce((b, s) => s.finals < b.finals ? s : b, swims[0]);
+  const swims      = byEvent[eventName];
+  const validSwims = swims.filter(s => !s.dq && s.finals !== null);
+  if (validSwims.length === 0) {
+    // All swims DQ'd
+    const s = swims[0];
+    return `<tr>
+      <td>${eventName}</td>
+      <td class="best-time" style="color:#c0392b">DQ</td>
+      <td>${shortMeet(s.meet)}</td>
+      <td>${s.date}</td>
+      <td style="color:#c0392b">—</td>
+    </tr>`;
+  }
+  const best      = validSwims.reduce((b, s) => s.finals < b.finals ? s : b, validSwims[0]);
   const eventDrop = best.finals - swims[0].entry;
   const cls       = eventDrop <= 0 ? "drop" : "added";
   return `<tr>
