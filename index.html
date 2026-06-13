@@ -246,9 +246,9 @@ function fmtTime(sec) {
 }
 function fmtDelta(d) { return (d < 0 ? "" : "+") + d.toFixed(2); }
 function fmtDate(dateStr) {
-  const [, m, d] = dateStr.split("-");
+  const [y, m] = dateStr.split("-");
   const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-  return `${months[parseInt(m,10)-1]} ${parseInt(d,10)}`;
+  return `${months[parseInt(m,10)-1]} ${y}`;
 }
 function shortMeet(name) {
   if (name.includes("Big CAT")) return "Big CAT";
