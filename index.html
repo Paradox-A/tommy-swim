@@ -216,7 +216,7 @@
   </table>
 </div>
 
-<footer>Last updated May 31, 2026</footer>
+<footer>Last updated Jun 13, 2026</footer>
 
 <script>
 // ── Raw data ─────────────────────────────────────────────────────────────────
@@ -230,6 +230,9 @@ const raw = [
   { meet:"HACY Summer Solstice",           date:"2026-05-31", event:"50m Fly",     stroke:"Fly",    entry:45.55,  finals:63.61,  change:+18.06, place:36, seed:18 },
   { meet:"HACY Summer Solstice",           date:"2026-05-31", event:"100m Back",   stroke:"Back",   entry:95.55,  finals:null,   change:null,   place:"DQ", seed:12, dq:true },
   { meet:"HACY Summer Solstice",           date:"2026-05-31", event:"100m Free",   stroke:"Free",   entry:85.55,  finals:103.94, change:+18.39, place:49, seed:29, notes:"Split: 50.92 + 53.02" },
+  { meet:"Big CAT LC Challenge",           date:"2026-06-13", event:"50m Free",    stroke:"Free",   entry:48.99,  finals:45.03,  change:-3.96,  place:32, seed:30 },
+  { meet:"Big CAT LC Challenge",           date:"2026-06-13", event:"50m Breast",  stroke:"Breast", entry:58.29,  finals:55.99,  change:-2.30,  place:15, seed:14 },
+  { meet:"Big CAT LC Challenge",           date:"2026-06-13", event:"100m Back",   stroke:"Back",   entry:111.99, finals:119.53, change:+7.54,  place:24, seed:21, notes:"Split: 57.10 + 62.43" },
 ];
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -243,8 +246,9 @@ function fmtTime(sec) {
 }
 function fmtDelta(d) { return (d < 0 ? "" : "+") + d.toFixed(2); }
 function shortMeet(name) {
-  if (name.includes("CAT"))  return "CAT May";
-  if (name.includes("HACY")) return "HACY Solstice";
+  if (name.includes("Big CAT")) return "Big CAT";
+  if (name.includes("CAT"))     return "CAT May";
+  if (name.includes("HACY"))    return "HACY Solstice";
   return name;
 }
 
