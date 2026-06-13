@@ -245,6 +245,11 @@ function fmtTime(sec) {
   return sec.toFixed(2);
 }
 function fmtDelta(d) { return (d < 0 ? "" : "+") + d.toFixed(2); }
+function fmtDate(dateStr) {
+  const [, m, d] = dateStr.split("-");
+  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return `${months[parseInt(m,10)-1]} ${parseInt(d,10)}`;
+}
 function shortMeet(name) {
   if (name.includes("Big CAT")) return "Big CAT";
   if (name.includes("CAT"))     return "CAT May";
@@ -301,12 +306,12 @@ const sectionsHtml = strokeOrder.filter(s => byStroke[s]).map(stroke => {
     const validSwims  = swims.filter(s => !s.dq && s.finals !== null);
 
     if (validSwims.length > 0) {
-      chartQueue.push({ cid, times: validSwims.map(s => s.finals), labels: validSwims.map(s => shortMeet(s.meet)), color });
+      chartQueue.push({ cid, times: validSwims.map(s => s.finals), labels: validSwims.map(s => `${shortMeet(s.meet)} · ${fmtDate(s.date)}`), color });
     }
 
     const rowsHtml = swims.map(s => {
       if (s.dq) return `<div class="event-row">
-        <span class="meet-name">${shortMeet(s.meet)}</span>
+        <span class="meet-name">${shortMeet(s.meet)} · ${fmtDate(s.date)}</span>
         <span class="time" style="color:#c0392b">DQ</span>
         <span class="delta" style="color:#c0392b">—</span>
       </div>`;
@@ -323,7 +328,7 @@ const sectionsHtml = strokeOrder.filter(s => byStroke[s]).map(stroke => {
         }
       }
       return `<div class="event-row">
-        <span class="meet-name">${shortMeet(s.meet)}</span>
+        <span class="meet-name">${shortMeet(s.meet)} · ${fmtDate(s.date)}</span>
         <span class="time">${fmtTime(s.finals)}</span>
         <span class="delta ${cls}">${arrow} ${Math.abs(s.change).toFixed(2)}s</span>
       </div>${splitHtml}`;
