@@ -293,6 +293,17 @@ Object.entries(byEvent).forEach(([eventName, swims]) => {
   byStroke[s].push([eventName, swims]);
 });
 
+// All meets in chronological order, used as the shared x-axis for every chart
+const allMeets = [...new Set(raw.map(r => r.meet))].sort((a, b) => {
+  const dateA = raw.filter(r => r.meet === a).sort((x, y) => x.date.localeCompare(y.date))[0].date;
+  const dateB = raw.filter(r => r.meet === b).sort((x, y) => x.date.localeCompare(y.date))[0].date;
+  return dateA.localeCompare(dateB);
+});
+const meetLabels = allMeets.map(meet => {
+  const d = raw.filter(r => r.meet === meet).sort((x, y) => x.date.localeCompare(y.date))[0].date;
+  return `${shortMeet(meet)} · ${fmtDate(d)}`;
+});
+
 const chartQueue = [];
 let chartIdx = 0;
 
@@ -306,7 +317,11 @@ const sectionsHtml = strokeOrder.filter(s => byStroke[s]).map(stroke => {
     const validSwims  = swims.filter(s => !s.dq && s.finals !== null);
 
     if (validSwims.length > 0) {
-      chartQueue.push({ cid, times: validSwims.map(s => s.finals), labels: validSwims.map(s => `${shortMeet(s.meet)} · ${fmtDate(s.date)}`), color });
+      const allTimes = allMeets.map(meet => {
+        const swim = swims.find(s => s.meet === meet);
+        return (swim && !swim.dq && swim.finals !== null) ? swim.finals : null;
+      });
+      chartQueue.push({ cid, times: allTimes, labels: meetLabels, color });
     }
 
     const rowsHtml = swims.map(s => {
@@ -351,8 +366,9 @@ document.getElementById("stroke-sections").innerHTML = sectionsHtml;
 chartQueue.forEach(({ cid, times, labels, color }) => {
   const ctx = document.getElementById(cid);
   if (!ctx) return;
-  const minT = Math.min(...times);
-  const maxT = Math.max(...times);
+  const validTimes = times.filter(t => t !== null);
+  const minT = Math.min(...validTimes);
+  const maxT = Math.max(...validTimes);
   const pad  = (maxT - minT) * 0.3 || 2;
   new Chart(ctx, {
     type: "line",
