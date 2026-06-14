@@ -265,17 +265,31 @@ raw.forEach(r => {
 });
 Object.values(byEvent).forEach(arr => arr.sort((a, b) => a.date.localeCompare(b.date)));
 
+// Annotate each swim with delta vs previous meet's finals (ignores entry times)
+Object.values(byEvent).forEach(swims => {
+  let prevFinals = null;
+  swims.forEach(s => {
+    if (!s.dq && s.finals !== null) {
+      s.meetDelta = prevFinals !== null ? +(s.finals - prevFinals).toFixed(2) : null;
+      prevFinals = s.finals;
+    } else {
+      s.meetDelta = null;
+    }
+  });
+});
+
 // ── Summary cards ─────────────────────────────────────────────────────────────
 const totalMeets = new Set(raw.map(r => r.meet)).size;
 const totalSwims = raw.length;
-const drops      = raw.filter(r => r.change !== null && r.change < 0).sort((a, b) => a.change - b.change);
+const allDeltas  = Object.values(byEvent).flatMap(swims => swims.filter(s => s.meetDelta !== null));
+const drops      = allDeltas.filter(s => s.meetDelta < 0).sort((a, b) => a.meetDelta - b.meetDelta);
 const bestDrop   = drops[0];
 
 document.getElementById("summary-cards").innerHTML = [
   { label: "Meets",         value: totalMeets,                      sub: "recorded" },
   { label: "Swims",         value: totalSwims,                      sub: "total entries" },
-  { label: "Times Dropped", value: drops.length,                    sub: `of ${totalSwims} swims`, cls: "drop" },
-  { label: "Best Drop",     value: fmtDelta(bestDrop.change) + "s", sub: bestDrop.event, cls: "drop" },
+  { label: "Times Dropped", value: drops.length,                     sub: `of ${allDeltas.length} comparisons`, cls: "drop" },
+  { label: "Best Drop",     value: fmtDelta(bestDrop.meetDelta) + "s", sub: bestDrop.event, cls: "drop" },
 ].map(c => `<div class="card">
     <div class="label">${c.label}</div>
     <div class="value ${c.cls || ""}">${c.value}</div>
@@ -330,8 +344,9 @@ const sectionsHtml = strokeOrder.filter(s => byStroke[s]).map(stroke => {
         <span class="time" style="color:#c0392b">DQ</span>
         <span class="delta" style="color:#c0392b">—</span>
       </div>`;
-      const cls   = s.change <= 0 ? "drop" : "added";
-      const arrow = s.change <= 0 ? "▼" : "▲";
+      const hasDelta = s.meetDelta !== null;
+      const cls      = hasDelta ? (s.meetDelta <= 0 ? "drop" : "added") : "";
+      const deltaStr = hasDelta ? `${s.meetDelta <= 0 ? "▼" : "▲"} ${Math.abs(s.meetDelta).toFixed(2)}s` : "—";
       let splitHtml = "";
       if (is100m && s.notes && s.notes.startsWith("Split:")) {
         const parts = s.notes.replace("Split:", "").trim().split("+").map(p => p.trim());
@@ -345,7 +360,7 @@ const sectionsHtml = strokeOrder.filter(s => byStroke[s]).map(stroke => {
       return `<div class="event-row">
         <span class="meet-name">${shortMeet(s.meet)} · ${fmtDate(s.date)}</span>
         <span class="time">${fmtTime(s.finals)}</span>
-        <span class="delta ${cls}">${arrow} ${Math.abs(s.change).toFixed(2)}s</span>
+        <span class="delta ${cls}">${deltaStr}</span>
       </div>${splitHtml}`;
     }).join("");
 
@@ -408,14 +423,14 @@ document.getElementById("best-times-body").innerHTML = sortedEvents.map(eventNam
     </tr>`;
   }
   const best      = validSwims.reduce((b, s) => s.finals < b.finals ? s : b, validSwims[0]);
-  const eventDrop = best.finals - swims[0].entry;
-  const cls       = eventDrop <= 0 ? "drop" : "added";
+  const eventDrop = validSwims.length > 1 ? +(best.finals - validSwims[0].finals).toFixed(2) : null;
+  const cls       = eventDrop !== null ? (eventDrop <= 0 ? "drop" : "added") : "";
   return `<tr>
     <td>${eventName}</td>
     <td class="best-time">${fmtTime(best.finals)}</td>
     <td>${shortMeet(best.meet)}</td>
     <td>${best.date}</td>
-    <td class="${cls}">${fmtDelta(eventDrop)}s</td>
+    <td class="${cls}">${eventDrop !== null ? fmtDelta(eventDrop) + "s" : "—"}</td>
   </tr>`;
 }).join("");
 </script>
