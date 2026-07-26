@@ -216,7 +216,7 @@
   </table>
 </div>
 
-<footer>Last updated Jun 14, 2026</footer>
+<footer>Last updated Jul 26, 2026</footer>
 
 <script>
 // ── Raw data ─────────────────────────────────────────────────────────────────
@@ -236,6 +236,8 @@ const raw = [
   { meet:"Big CAT LC Challenge",           date:"2026-06-14", event:"50m Back",    stroke:"Back",   entry:51.57,  finals:52.53,  change:+0.96,  place:15, seed:13 },
   { meet:"Big CAT LC Challenge",           date:"2026-06-14", event:"100m Breast", stroke:"Breast", entry:130.99, finals:123.77, change:-7.22,  place:19, seed:18, notes:"Split: 59.32 + 64.45" },
   { meet:"Big CAT LC Challenge",           date:"2026-06-14", event:"100m Free",   stroke:"Free",   entry:105.34, finals:102.68, change:-2.66,  place:19, seed:18 },
+  { meet:"GSCY 13 & Under Championships",  date:"2026-07-24", event:"50m Breast",  stroke:"Breast", entry:null,   finals:53.74,  change:null,   place:46, seed:null },
+  { meet:"GSCY 13 & Under Championships",  date:"2026-07-24", event:"50m Free",    stroke:"Free",   entry:null,   finals:48.10,  change:null,   place:91, seed:null },
 ];
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -257,6 +259,7 @@ function shortMeet(name) {
   if (name.includes("Big CAT")) return "Big CAT";
   if (name.includes("CAT"))     return "CAT May";
   if (name.includes("HACY"))    return "HACY Solstice";
+  if (name.includes("GSCY"))    return "GSCY 13&U";
   return name;
 }
 
